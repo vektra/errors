@@ -1,7 +1,8 @@
 errors
 ======
 
-[GoDocs](http://godoc.org/github.com/vektra/errors)
+[![GoDoc](https://godoc.org/github.com/vektra/errors?status.svg)](https://godoc.org/github.com/vektra/errors)
+[![Build Status](https://travis-ci.org/vektra/errors.svg?branch=master)](https://travis-ci.org/vektra/errors)
 
 This is a replacement package for the stdlib errors package.
 
