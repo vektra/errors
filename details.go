@@ -2,6 +2,11 @@ package errors
 
 import "fmt"
 
+// Derive a map of detailed information about an error.
+// For HereErrors, map includes a "location" key
+// For CauseErrors, map includes one or more "cause" keys
+// For TraceErrors, map includes a "trace" key
+
 func Details(err error) map[string]string {
 	dets := map[string]string{}
 
