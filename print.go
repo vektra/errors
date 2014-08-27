@@ -7,7 +7,6 @@ import (
 
 // Print out the information within err to out. This understands
 // errors that use Here, Cause, and Trace.
-
 func Print(err error, out io.Writer) {
 	switch specific := err.(type) {
 	case *HereError:
@@ -38,7 +37,6 @@ func Print(err error, out io.Writer) {
 }
 
 // Print out err to Stderr
-
 func Show(err error) {
 	Print(err, os.Stderr)
 }

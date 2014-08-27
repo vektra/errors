@@ -8,7 +8,6 @@ import (
 )
 
 // Test if err indicates EOF
-
 func EOF(err error) bool {
 	if err == io.EOF {
 		return true

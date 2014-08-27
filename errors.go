@@ -28,7 +28,6 @@ func (e *ErrorString) Error() string {
 }
 
 // HereError wraps another error with location information
-
 type HereError struct {
 	error
 	pc  uintptr
@@ -36,7 +35,6 @@ type HereError struct {
 }
 
 // Wrap an error with location information derived from the caller location
-
 func Here(orig error) *HereError {
 	pc, file, line, ok := runtime.Caller(1)
 
@@ -52,19 +50,16 @@ func Here(orig error) *HereError {
 }
 
 // Return a good string representation of the location and error
-
 func (h *HereError) Error() string {
 	return h.Location() + ": " + h.error.Error()
 }
 
 // Return the full path and line information for the location
-
 func (h *HereError) FullLocation() string {
 	return h.loc
 }
 
 // Return a short version of the location information
-
 func (h *HereError) Location() string {
 	lastSlash := strings.LastIndex(h.loc, "/")
 	secondLastSlash := strings.LastIndex(h.loc[:lastSlash], "/")
@@ -73,14 +68,12 @@ func (h *HereError) Location() string {
 }
 
 // Contains 2 errors, an updated error and a causing error
-
 type CauseError struct {
 	error
 	cause error
 }
 
 // Wraps an error containing the information about what caused this error
-
 func Cause(err error, cause error) *CauseError {
 	return &CauseError{
 		error: err,
@@ -89,20 +82,17 @@ func Cause(err error, cause error) *CauseError {
 }
 
 // Return the causing error
-
 func (c *CauseError) Cause() error {
 	return c.cause
 }
 
 // Contains an error and a stacktrace
-
 type TraceError struct {
 	error
 	trace string
 }
 
 // Wraps an error with a stacktrace derived from the calling location
-
 func Trace(err error) *TraceError {
 	buf := make([]byte, 1024)
 	sz := runtime.Stack(buf, false)
@@ -114,7 +104,6 @@ func Trace(err error) *TraceError {
 }
 
 // Return the stacktrace
-
 func (t *TraceError) Trace() string {
 	return t.trace
 }
