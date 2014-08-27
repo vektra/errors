@@ -1,6 +1,8 @@
 errors
 ======
 
+[GoDocs](http://godoc.org/github.com/vektra/errors)
+
 This is a replacement package for the stdlib errors package.
 
 It provides the same interface (which is really just the `New()` function) as
