@@ -1,16 +1,22 @@
 package errors
 
-// If err is a Here, Cause, or Trace wrapper, return the inner error
+// Remove any Here, Cause, Trace, Context or Subject wrappers from err
 func Unwrap(err error) error {
-	switch specific := err.(type) {
-	case *HereError:
-		return specific.error
-	case *CauseError:
-		return specific.error
-	case *TraceError:
-		return specific.error
-	default:
-		return err
+	for {
+		switch specific := err.(type) {
+		case *HereError:
+			err = specific.error
+		case *CauseError:
+			err = specific.error
+		case *TraceError:
+			err = specific.error
+		case *ContextError:
+			err = specific.error
+		case *SubjectError:
+			err = specific.error
+		default:
+			return err
+		}
 	}
 }
 

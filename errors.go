@@ -107,3 +107,52 @@ func Trace(err error) *TraceError {
 func (t *TraceError) Trace() string {
 	return t.trace
 }
+
+// Adds a string describing the context of this error without changing
+// the underlying error itself.
+type ContextError struct {
+	error
+	context string
+}
+
+func Context(err error, ctx string) *ContextError {
+	return &ContextError{
+		error:   err,
+		context: ctx,
+	}
+}
+
+func (c *ContextError) Context() string {
+	return c.context
+}
+
+// Return a string containing the context as well as the underlying error
+func (c *ContextError) Error() string {
+	return c.context + ": " + c.error.Error()
+}
+
+// Attaches a subject to an error. An example would be failing
+// to open a file, the path of the file could be added as the subject
+// to be shown or retrieved later.
+type SubjectError struct {
+	error
+	subject interface{}
+}
+
+func Subject(err error, sub interface{}) *SubjectError {
+	return &SubjectError{
+		error:   err,
+		subject: sub,
+	}
+}
+
+// Return the subject of the error
+func (c *SubjectError) Subject() interface{} {
+	return c.subject
+}
+
+// Return a string containing the context as well as the underlying error
+// This uses fmt.Sprintf's %s to convert the subject to a string.
+func (c *SubjectError) Error() string {
+	return fmt.Sprintf("%s: %s", c.error.Error(), c.subject)
+}

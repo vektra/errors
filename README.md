@@ -30,8 +30,31 @@ that prints things out to see what these highlevel errors were derived.
 The "Big Kahuna" of context types. Wraps an error with the stacktrace about the
 current goroutine.
 
+### Context
+
+Allows for an error to be decorated with a string describing the context
+of the error. This is intented to be used instead of using
+`fmt.Errorf("while running wild: %s", err)` because it preserves the ability
+check the original error.
+
+### Subject
+
+Allows a subject to be attached to an error. An example of this would be the
+ability to indicate an error with a specific file path:
+given `err = ErrNotFound`, `Subject(err, path)`. Similar to context, the idea
+is the ability to attach additional information to the error without destroying
+the ability to compare against it later.
 
 ## Functions
+
+### Equal
+
+Compares 2 errors smartly. It removes any wrappers defined in this package, allowing
+for comparison against true base errors without the wrappers changing the ability
+to detect them.
+
+For instance, given a function that does `return Here(ErrNotExist)`, it's possible
+to detect this specific error by doing `Equal(f(), ErrNotExist)`.
 
 ### Print
 

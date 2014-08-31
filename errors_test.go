@@ -80,6 +80,24 @@ func TestErrorTrace(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("errors_test.go:%d", line-1), loc[sidx+1:widx])
 }
 
+func TestErrorContext(t *testing.T) {
+	err := New("this is an error")
+
+	ctx := Context(err, "while testing")
+
+	assert.Equal(t, "while testing", ctx.Context())
+	assert.Equal(t, "while testing: this is an error", ctx.Error())
+}
+
+func TestErrorSubject(t *testing.T) {
+	err := New("this is an error")
+
+	sub := Subject(err, "this is a subject")
+
+	assert.Equal(t, "this is a subject", sub.Subject().(string))
+	assert.Equal(t, "this is an error: this is a subject", sub.Error())
+}
+
 func TestErrorFormat(t *testing.T) {
 	fmt := "error: %s"
 
@@ -242,6 +260,24 @@ func TestErrorUnwrapTrace(t *testing.T) {
 	assert.Equal(t, Unwrap(Trace(err)), err)
 }
 
+func TestErrorUnwrapContext(t *testing.T) {
+	err := New("this is an error")
+
+	assert.Equal(t, Unwrap(Context(err, "blah")), err)
+}
+
+func TestErrorUnwrapSubject(t *testing.T) {
+	err := New("this is an error")
+
+	assert.Equal(t, Unwrap(Subject(err, "blah")), err)
+}
+
+func TestErrorUnwrapMultipleLevels(t *testing.T) {
+	err := New("this is an error")
+
+	assert.Equal(t, Unwrap(Subject(Here(err), "blah")), err)
+}
+
 func TestErrorEqualHere(t *testing.T) {
 	err := New("this is an error")
 
@@ -259,6 +295,18 @@ func TestErrorEqualTrace(t *testing.T) {
 	err := New("this is an error")
 
 	assert.True(t, Equal(Trace(err), err))
+}
+
+func TestErrorEqualContext(t *testing.T) {
+	err := New("this is an error")
+
+	assert.True(t, Equal(Context(err, "blah"), err))
+}
+
+func TestErrorEqualSubject(t *testing.T) {
+	err := New("this is an error")
+
+	assert.True(t, Equal(Subject(err, "blah"), err))
 }
 
 func TestErrorEqualGeneric(t *testing.T) {
