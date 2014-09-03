@@ -36,6 +36,10 @@ type HereError struct {
 
 // Wrap an error with location information derived from the caller location
 func Here(orig error) *HereError {
+	if orig == nil {
+		return nil
+	}
+
 	pc, file, line, ok := runtime.Caller(1)
 
 	if ok {
@@ -75,6 +79,10 @@ type CauseError struct {
 
 // Wraps an error containing the information about what caused this error
 func Cause(err error, cause error) *CauseError {
+	if err == nil {
+		return nil
+	}
+
 	return &CauseError{
 		error: err,
 		cause: cause,
@@ -94,6 +102,10 @@ type TraceError struct {
 
 // Wraps an error with a stacktrace derived from the calling location
 func Trace(err error) *TraceError {
+	if err == nil {
+		return nil
+	}
+
 	buf := make([]byte, 1024)
 	sz := runtime.Stack(buf, false)
 
@@ -116,6 +128,10 @@ type ContextError struct {
 }
 
 func Context(err error, ctx string) *ContextError {
+	if err == nil {
+		return nil
+	}
+
 	return &ContextError{
 		error:   err,
 		context: ctx,
@@ -140,6 +156,10 @@ type SubjectError struct {
 }
 
 func Subject(err error, sub interface{}) *SubjectError {
+	if err == nil {
+		return nil
+	}
+
 	return &SubjectError{
 		error:   err,
 		subject: sub,
