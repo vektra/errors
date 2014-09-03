@@ -70,3 +70,23 @@ func TestErrorDetailsTrace(t *testing.T) {
 
 	assert.Equal(t, dets, Details(trace))
 }
+
+func TestErrorDetailsHereInSubject(t *testing.T) {
+	err := New("this is an error")
+
+	here := Here(err)
+	_, file, line, ok := runtime.Caller(0)
+	if !ok {
+		panic("caller is busted")
+	}
+
+	dets := map[string]string{
+		"error":    "this is an error",
+		"location": fmt.Sprintf("%s:%d", file, line-1),
+		"subject":  "this is a subject",
+	}
+
+	sub := Subject(here, "this is a subject")
+
+	assert.Equal(t, dets, Details(sub))
+}

@@ -2,19 +2,12 @@ package errors
 
 import "fmt"
 
-// Derive a map of detailed information about an error.
-// For HereErrors, map includes a "location" key
-// For CauseErrors, map includes one or more "cause" keys
-// For TraceErrors, map includes a "trace" key
-func Details(err error) map[string]string {
-	dets := map[string]string{}
-
+func addDetails(err error, dets map[string]string) {
 	switch specific := err.(type) {
 	case *HereError:
-		dets["error"] = specific.error.Error()
 		dets["location"] = specific.FullLocation()
+		addDetails(specific.error, dets)
 	case *CauseError:
-		dets["error"] = specific.error.Error()
 		dets["cause"] = specific.cause.Error()
 
 		i := 2
@@ -29,12 +22,32 @@ func Details(err error) map[string]string {
 				}
 			}
 		}
+
+		addDetails(specific.error, dets)
 	case *TraceError:
-		dets["error"] = specific.error.Error()
 		dets["trace"] = specific.trace
+		addDetails(specific.error, dets)
+	case *ContextError:
+		dets["context"] = specific.Context()
+		addDetails(specific.error, dets)
+	case *SubjectError:
+		dets["subject"] = fmt.Sprintf("%s", specific.Subject())
+		addDetails(specific.error, dets)
 	default:
 		dets["error"] = err.Error()
 	}
+}
+
+// Derive a map of detailed information about an error.
+// For HereErrors, map includes a "location" key
+// For CauseErrors, map includes one or more "cause" keys
+// For TraceErrors, map includes a "trace" key
+// For ContextErrors, map includes a "context" key
+// For SubjectErrors, map includes a "subject" key
+func Details(err error) map[string]string {
+	dets := map[string]string{}
+
+	addDetails(err, dets)
 
 	return dets
 }
