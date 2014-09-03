@@ -61,7 +61,7 @@ func TestErrorDetailsMultipleCauses(t *testing.T) {
 
 func TestErrorDetailsTrace(t *testing.T) {
 	err := New("this is an error")
-	trace := Trace(err)
+	trace := Trace(err).(*TraceError)
 
 	dets := map[string]string{
 		"error": "this is an error",

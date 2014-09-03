@@ -35,7 +35,7 @@ type HereError struct {
 }
 
 // Wrap an error with location information derived from the caller location
-func Here(orig error) *HereError {
+func Here(orig error) error {
 	if orig == nil {
 		return nil
 	}
@@ -84,7 +84,7 @@ type CauseError struct {
 }
 
 // Wraps an error containing the information about what caused this error
-func Cause(err error, cause error) *CauseError {
+func Cause(err error, cause error) error {
 	if err == nil {
 		return nil
 	}
@@ -107,7 +107,7 @@ type TraceError struct {
 }
 
 // Wraps an error with a stacktrace derived from the calling location
-func Trace(err error) *TraceError {
+func Trace(err error) error {
 	if err == nil {
 		return nil
 	}
@@ -133,7 +133,7 @@ type ContextError struct {
 	context string
 }
 
-func Context(err error, ctx string) *ContextError {
+func Context(err error, ctx string) error {
 	if err == nil {
 		return nil
 	}
@@ -161,7 +161,7 @@ type SubjectError struct {
 	subject interface{}
 }
 
-func Subject(err error, sub interface{}) *SubjectError {
+func Subject(err error, sub interface{}) error {
 	if err == nil {
 		return nil
 	}

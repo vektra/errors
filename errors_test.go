@@ -25,7 +25,7 @@ func TestErrorsNew(t *testing.T) {
 func TestErrorHere(t *testing.T) {
 	err := New("this is an error")
 
-	here := Here(err)
+	here := Here(err).(*HereError)
 	_, _, line, ok := runtime.Caller(0)
 	if !ok {
 		panic("caller is busted")
@@ -65,7 +65,7 @@ func TestErrorCause(t *testing.T) {
 	orig := New("this is the cause")
 	err := New("this is an error")
 
-	cause := Cause(err, orig)
+	cause := Cause(err, orig).(*CauseError)
 
 	assert.Equal(t, cause.Cause(), orig)
 }
@@ -73,7 +73,7 @@ func TestErrorCause(t *testing.T) {
 func TestErrorTrace(t *testing.T) {
 	err := New("this is an error")
 
-	here := Trace(err)
+	here := Trace(err).(*TraceError)
 	_, _, line, ok := runtime.Caller(0)
 	if !ok {
 		panic("caller is busted")
@@ -93,7 +93,7 @@ func TestErrorTrace(t *testing.T) {
 func TestErrorContext(t *testing.T) {
 	err := New("this is an error")
 
-	ctx := Context(err, "while testing")
+	ctx := Context(err, "while testing").(*ContextError)
 
 	assert.Equal(t, "while testing", ctx.Context())
 	assert.Equal(t, "while testing: this is an error", ctx.Error())
@@ -102,7 +102,7 @@ func TestErrorContext(t *testing.T) {
 func TestErrorSubject(t *testing.T) {
 	err := New("this is an error")
 
-	sub := Subject(err, "this is a subject")
+	sub := Subject(err, "this is a subject").(*SubjectError)
 
 	assert.Equal(t, "this is a subject", sub.Subject().(string))
 	assert.Equal(t, "this is an error: this is a subject", sub.Error())
