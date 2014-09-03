@@ -40,6 +40,12 @@ func Here(orig error) *HereError {
 		return nil
 	}
 
+	// If the error is already a Here, then don't redecorate it because we want
+	// to preserve the most accurate info, which is upstream of this call.
+	if he, ok := orig.(*HereError); ok {
+		return he
+	}
+
 	pc, file, line, ok := runtime.Caller(1)
 
 	if ok {

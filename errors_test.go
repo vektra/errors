@@ -51,6 +51,16 @@ func TestErrorHereString(t *testing.T) {
 	assert.Equal(t, fmt.Sprintf("errors/errors_test.go:%d: this is an error", line-1), here.Error())
 }
 
+func TestErrorHereChecksForHere(t *testing.T) {
+	err := New("this is an error")
+
+	here := Here(err)
+
+	if here != Here(here) {
+		t.Fatalf("Here re-wrapped another Here")
+	}
+}
+
 func TestErrorCause(t *testing.T) {
 	orig := New("this is the cause")
 	err := New("this is an error")
